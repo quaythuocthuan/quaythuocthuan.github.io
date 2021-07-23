@@ -1,0 +1,43 @@
+<h1>DANH SÁCH BỆNH NHÂN</h1>
+
+<table
+  mat-table
+  [dataSource]="dataSource"
+  class="mat-elevation-z8"
+  matSort
+  matSortActive="created"
+  matSortDisableClear
+  matSortDirection="desc"
+>
+  <!--- Note that these columns can be defined in any order.
+        The actual rendered columns are set as a property on the row definition" -->
+
+  <ng-container matColumnDef="id">
+    <th mat-header-cell *matHeaderCellDef>#</th>
+    <td mat-cell *matCellDef="let element">{{ element.id | id }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef>Tên</th>
+    <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="age">
+    <th mat-header-cell *matHeaderCellDef>Tuổi</th>
+    <td mat-cell *matCellDef="let element">{{ element.birthday | age }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="birthday">
+    <th mat-header-cell *matHeaderCellDef>Năm sinh</th>
+    <td mat-cell *matCellDef="let element">{{ element.birthday }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="address">
+    <th mat-header-cell *matHeaderCellDef>Địa chỉ</th>
+    <td mat-cell *matCellDef="let element">{{ element.address }}</td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>
+<mat-paginator [length]="resultsLength" [pageSize]="20"></mat-paginator>

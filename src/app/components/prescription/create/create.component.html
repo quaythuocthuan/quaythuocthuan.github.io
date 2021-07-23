@@ -1,1 +1,151 @@
-<p>create works!</p>
+<h1>TẠO ĐƠN THUỐC</h1>
+<ol>
+  <mat-divider></mat-divider>
+  <li>
+    <h2>THÔNG TIN BỆNH NHÂN</h2>
+    <form [formGroup]="patientInfo" (ngSubmit)="patientInfoSubmit()">
+      <div fxLayout="row" fxLayoutAlign="start stretch">
+        <div fxLayout="column" fxLayoutAlign="space-between stretch">
+          <div fxLayout="row" fxLayoutAlign="start start">
+            <mat-form-field class="mr" appearance="outline">
+              <mat-label>Tên bệnh nhân</mat-label>
+              <input
+                matInput
+                placeholder="Tên bệnh nhân"
+                formControlName="patientName"
+                autocomplete="off"
+                required
+              />
+              <mat-hint>Hint</mat-hint>
+            </mat-form-field>
+            <mat-form-field class="mr" appearance="outline">
+              <mat-label>Năm sinh</mat-label>
+              <input
+                matInput
+                type="number"
+                formControlName="birthday"
+                placeholder="Năm sinh"
+                autocomplete="off"
+                required
+                [max]="maxPatientBirthYear"
+                maxlength="4"
+              />
+              <mat-hint>Hint</mat-hint>
+            </mat-form-field>
+          </div>
+          <div fxLayout="row" fxLayoutAlign="start start">
+            <mat-form-field class="mr width100" appearance="outline">
+              <mat-label>Địa chỉ</mat-label>
+              <textarea
+                matInput
+                formControlName="address"
+                placeholder="Địa chỉ"
+              ></textarea>
+            </mat-form-field>
+          </div>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="start start">
+          <div class="mr">
+            <button type="submit" mat-mini-fab color="primary">
+              <mat-icon>done_outline</mat-icon>
+            </button>
+            <button type="reset" mat-mini-fab color="warn">
+              <mat-icon>highlight_off</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+    <mat-divider></mat-divider>
+  </li>
+  <li>
+    <h2>DƯỢC PHẨM</h2>
+    <div *ngFor="let prescriptionForm of prescriptionForms; index as i;">
+      <mat-card>
+        <form [formGroup]="prescriptionForm" (ngSubmit)="prescriptionSubmit(prescriptionForm)">
+          <div fxLayout="row" fxLayoutAlign="start center">
+            <div
+              fxLayout="row"
+              fxFlex="25"
+              fxLayoutAlign="space-between stretch"
+            >
+              <mat-form-field appearance="outline" class="mr width100">
+                <mat-label>Tên thuốc</mat-label>
+                <input
+                  matInput
+                  placeholder="Tên thuốc"
+                  formControlName="medicine"
+                  autocomplete="off"
+                  required
+                />
+                <mat-hint>Hint</mat-hint>
+              </mat-form-field>
+            </div>
+            <div
+              fxLayout="row"
+              fxFlex="15"
+              class="mr"
+              fxLayoutAlign="space-around center"
+            >
+              <mat-form-field fxFlex="50" appearance="outline">
+                <mat-label>Số lượng</mat-label>
+                <input
+                  matInput
+                  type="number"
+                  formControlName="quantity"
+                  placeholder="Số lượng"
+                  autocomplete="off"
+                  required
+                />
+                <mat-hint>Hint</mat-hint>
+              </mat-form-field>
+              <mat-form-field fxFlex="50" class="mr" appearance="outline">
+                <mat-label>Đơn vị</mat-label>
+                <mat-select formControlName="typeMedicine">
+                  <mat-option
+                    *ngFor="let typeMedicine of typeMedicines"
+                    [value]="typeMedicine"
+                  >
+                    {{ typeMedicine }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <section
+              formGroupName="use"
+              fxLayout="row"
+              fxFlex="20"
+              fxLayoutAlign="space-between center"
+              class="mr"
+            >
+              <mat-checkbox formControlName="morning">Sáng</mat-checkbox>
+              <mat-checkbox formControlName="afternoon1">Trưa</mat-checkbox>
+              <mat-checkbox formControlName="afternoon2">Chiều</mat-checkbox>
+              <mat-checkbox formControlName="everning">Tối</mat-checkbox>
+            </section>
+            <div
+              fxLayout="row"
+              fxFlex="25"
+              fxLayoutAlign="start center"
+              class="mr"
+            >
+              <button type="submit" mat-mini-fab color="primary">
+                <mat-icon>done_outline</mat-icon>
+              </button>
+              <button (click)="remove(i)" type="reset" mat-mini-fab color="warn">
+                <mat-icon>highlight_off</mat-icon>
+              </button>
+            </div>
+            <div fxFlex></div>
+          </div>
+        </form>
+      </mat-card>
+    </div>
+    <div>
+      <button (click)="addMore()" type="reset" mat-mini-fab color="warn">
+        <mat-icon>control_point</mat-icon>
+      </button>
+    </div>
+
+  </li>
+</ol>

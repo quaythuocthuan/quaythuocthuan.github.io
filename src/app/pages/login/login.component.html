@@ -1,1 +1,29 @@
-<p>login works!</p>
+<mat-progress-bar mode="indeterminate" style="position: fixed;" *ngIf="isLoading"></mat-progress-bar>
+<div fxLayout="row" fxLayoutAlign="center center" style="height: 100vh; min-height: 100vh; background-repeat: no-repeat; background-size: cover;" [style.backgroundImage]="backgroundImage">
+  <mat-card fxLayout="column" fxLayoutAlign="center center" class="my-card">
+    <mat-card-title fxFlex="100">ĐĂNG NHẬP</mat-card-title>
+    <mat-card-subtitle>Quầy Thuốc Thu An</mat-card-subtitle>
+    <mat-card-content>
+      <form [formGroup]="loginForm" (ngSubmit)="loginSubmit()" fxLayout="column" fxLayoutAlign="center center">
+        <mat-form-field appearance="legacy">
+          <mat-label>Username</mat-label>
+          <input matInput formControlName="usn" placeholder="user001" required>
+          <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+        </mat-form-field>
+        <mat-form-field appearance="legacy">
+          <mat-label>Password</mat-label>
+          <input matInput formControlName="pwd" type="password" placeholder="****" required>
+          <mat-icon matSuffix>password</mat-icon>
+        </mat-form-field>
+        <div>
+          <button type="submit" mat-button color="primary">
+            <mat-icon>done_outline</mat-icon>
+          </button>
+          <button type="reset" mat-button>
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

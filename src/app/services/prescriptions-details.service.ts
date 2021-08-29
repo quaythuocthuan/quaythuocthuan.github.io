@@ -1,3 +1,4 @@
+import { CookieService } from 'ngx-cookie-service';
 import { environment } from 'src/environments/environment';
 
 import { HttpClient } from '@angular/common/http';
@@ -13,17 +14,24 @@ import { PageInfo, SearchReponsePayload } from '../utils/types';
 export class PrescriptionsDetailsService {
   private apiURL: string = environment.apiURL;
   private base = 'details';
+  private accessToken = '';
 
   constructor(
     protected http: HttpClient,
-  ) { }
+    private cookieService: CookieService,
+  ) {
+    this.accessToken = `Bearer ${this.cookieService.get(btoa('accessToken'))}`;
+  }
 
   create(patientId: any, data: PrescriptionDetails) {
     return this.http.post<PrescriptionDetails>(
       `${this.apiURL}/patients/${patientId}/prescriptions/${data.prescriptionId}/${this.base}`,
       data,
       {
-        headers,
+        headers: {
+          ...headers,
+          authorization: this.accessToken,
+        },
       },
     );
   }
@@ -43,6 +51,7 @@ export class PrescriptionsDetailsService {
         'page-order'  : order,
         'page-offset' : offset.toString(),
         'page-limit'  : limit.toString(),
+        authorization : this.accessToken,
       },
     });
   }
@@ -53,7 +62,10 @@ export class PrescriptionsDetailsService {
     prescriptionId,
   }: any, data: Partial<PrescriptionDetails>) {
     return this.http.patch(`${this.apiURL}/patients/${patientId}/prescriptions/${prescriptionId}/details/${id}`, data, {
-      headers,
+      headers: {
+        ...headers,
+        authorization: this.accessToken,
+      },
     });
   }
 
@@ -63,7 +75,10 @@ export class PrescriptionsDetailsService {
     prescriptionId,
   }: any) {
     return this.http.delete(`${this.apiURL}/patients/${patientId}/prescriptions/${prescriptionId}/details/${id}`, {
-      headers,
+      headers: {
+        ...headers,
+        authorization: this.accessToken,
+      },
     });
   }
 }

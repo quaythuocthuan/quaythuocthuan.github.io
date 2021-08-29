@@ -1,3 +1,4 @@
+import { CookieService } from 'ngx-cookie-service';
 import { environment } from 'src/environments/environment';
 
 import { HttpClient } from '@angular/common/http';
@@ -13,10 +14,14 @@ import { PageInfo, SearchReponsePayload } from '../utils/types';
 export class PrescriptionsService {
   private apiURL: string = environment.apiURL;
   private base = 'prescriptions';
+  private accessToken = '';
 
   constructor(
     protected http: HttpClient,
-  ) { }
+    private cookieService: CookieService,
+  ) {
+    this.accessToken = `Bearer ${this.cookieService.get(btoa('accessToken'))}`;
+  }
 
   create({
     patientId,
@@ -25,7 +30,10 @@ export class PrescriptionsService {
     return this.http.post<Prescription>(`${this.apiURL}/patients/${patientId}/${this.base}`, {
       diagnostic,
     }, {
-      headers,
+      headers: {
+        ...headers,
+        authorization: this.accessToken,
+      },
     });
   }
 
@@ -42,13 +50,17 @@ export class PrescriptionsService {
         'page-order'  : order,
         'page-offset' : offset.toString(),
         'page-limit'  : limit.toString(),
+        authorization : this.accessToken,
       },
     });
   }
 
   findById(patientId: any, prescriptionId: any) {
     return this.http.get<Prescription>(`${this.apiURL}/patients/${patientId}/${this.base}/${prescriptionId}`, {
-      headers,
+      headers: {
+        ...headers,
+        authorization: this.accessToken,
+      },
     });
   }
 
@@ -57,7 +69,10 @@ export class PrescriptionsService {
     patientId,
   }: any, data: Partial<Prescription>) {
     return this.http.patch(`${this.apiURL}/patients/${patientId}/${this.base}/${id}`, data, {
-      headers,
+      headers: {
+        ...headers,
+        authorization: this.accessToken,
+      },
     });
   }
 
@@ -66,7 +81,10 @@ export class PrescriptionsService {
     patientId,
   }: any) {
     return this.http.delete(`${this.apiURL}/patients/${patientId}/${this.base}/${id}`, {
-      headers,
+      headers: {
+        ...headers,
+        authorization: this.accessToken,
+      },
     });
   }
 }

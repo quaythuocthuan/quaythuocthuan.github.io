@@ -1,43 +1,232 @@
-<h1>DANH SÁCH BỆNH NHÂN</h1>
+<mat-progress-bar mode="query" *ngIf="isLoading"></mat-progress-bar>
+<div class="wrapper">
+  <p>
+    <a [routerLink]="['']">
+      <button mat-button><mat-icon>home</mat-icon></button>
+    </a>
+  </p>
+  <mat-accordion>
+    <mat-expansion-panel [expanded]="step" (opened)="setStep(true)" hideToggle>
+      <mat-expansion-panel-header>
+        <mat-panel-title fxLayout="column" fxLayoutAlign="space-around center">
+          <button
+            mat-button
+            color="primary"
+            aria-label="Tạo thông tin bệnh nhân"
+          >
+            Tạo thông tin bệnh nhân
+            <mat-icon>expand_more</mat-icon>
+          </button>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <mat-panel-description fxLayout="row" fxLayoutAlign="center center">
+        <form
+          [formGroup]="patientInfo"
+          (ngSubmit)="createpatientSubmit()"
+          fxLayout="row wrap"
+          fxLayoutAlign="space-around center"
+          fxFlex="30"
+          #myForm="ngForm"
+        >
+          <div fxLayoutGap="1em" fxFlex="100">
+            <mat-form-field class="mr" appearance="outline" fxFlex="50">
+              <mat-label>Tên bệnh nhân</mat-label>
+              <input
+                matInput
+                placeholder=""
+                formControlName="patientName"
+                autocomplete="off"
+                required
+              />
+            </mat-form-field>
 
-<table
-  mat-table
-  [dataSource]="dataSource"
-  class="mat-elevation-z8"
-  matSort
-  matSortActive="created"
-  matSortDisableClear
-  matSortDirection="desc"
->
-  <!--- Note that these columns can be defined in any order.
-        The actual rendered columns are set as a property on the row definition" -->
+            <mat-form-field class="mr" appearance="outline" fxFlex="50">
+              <mat-label>Năm sinh</mat-label>
+              <input
+                matInput
+                type="number"
+                formControlName="birthday"
+                placeholder="1996"
+                autocomplete="off"
+                required
+                [max]="maxPatientBirthYear"
+                maxlength="4"
+              />
+            </mat-form-field>
+          </div>
 
-  <ng-container matColumnDef="id">
-    <th mat-header-cell *matHeaderCellDef>#</th>
-    <td mat-cell *matCellDef="let element">{{ element.id | id }}</td>
-  </ng-container>
+          <mat-form-field class="mr" appearance="outline" fxFlex="100">
+            <mat-label>Số điện thoại</mat-label>
+            <span matPrefix>+84 &nbsp;</span>
+            <input
+              matInput
+              type="tel"
+              formControlName="phone"
+              placeholder="555-555-1234"
+              autocomplete="off"
+              max="11"
+              maxlength="11"
+            />
+          </mat-form-field>
 
-  <ng-container matColumnDef="name">
-    <th mat-header-cell *matHeaderCellDef>Tên</th>
-    <td mat-cell *matCellDef="let element">{{ element.name }}</td>
-  </ng-container>
+          <mat-form-field class="mr width100" appearance="outline" fxFlex="100">
+            <mat-label>Địa chỉ</mat-label>
+            <textarea
+              matInput
+              formControlName="address"
+              placeholder="Hoà Quới A, Hoà An, Phụng Hiệp, Hậu Giang"
+            ></textarea>
+          </mat-form-field>
+          <div>
+            <button type="submit" mat-button color="primary">
+              <mat-icon>done_outline</mat-icon>
+            </button>
+            <button type="button" mat-button (click)="cancel()">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+        </form>
+      </mat-panel-description>
+    </mat-expansion-panel>
+  </mat-accordion>
+  <div [style.display]="resultsLength > 0 ? 'inherit' : 'none'">
+    <h2>DANH SÁCH BỆNH NHÂN</h2>
 
-  <ng-container matColumnDef="age">
-    <th mat-header-cell *matHeaderCellDef>Tuổi</th>
-    <td mat-cell *matCellDef="let element">{{ element.birthday | age }}</td>
-  </ng-container>
+    <form [formGroup]="patientSearchbyIdForm" (ngSubmit)="searchPatientById()">
+      <mat-form-field appearance="standard">
+        <mat-label>ID</mat-label>
+        <input
+          matInput
+          placeholder="Ex. 121, 122, 123,..."
+          #IdSearchBox
+          formControlName="id"
+          autocomplete="off"
+        />
+      </mat-form-field>
+    </form>
+    <mat-form-field appearance="standard">
+      <mat-label>Tìm</mat-label>
+      <input
+        matInput
+        placeholder="Tên, tuổi, địa chỉ,...."
+        #input
+        (keyup)="applyFilter($event)"
+        autocomplete="off"
+      />
+    </mat-form-field>
+    <br />
+    <table
+      mat-table
+      [dataSource]="dataSource"
+      class="mat-elevation-z8"
+      matSort
+      matsortdisableclear
+      matSortActive="updatedAt"
+      matSortDirection="desc"
+    >
+      <ng-container matColumnDef="id">
+        <th mat-header-cell mat-sort-header *matHeaderCellDef>#</th>
+        <td
+          class="highlight"
+          mat-cell
+          *matCellDef="let element"
+          (contextmenu)="onContextMenu($event, element)"
+        >
+          {{ element.id | id }}
+        </td>
+      </ng-container>
 
-  <ng-container matColumnDef="birthday">
-    <th mat-header-cell *matHeaderCellDef>Năm sinh</th>
-    <td mat-cell *matCellDef="let element">{{ element.birthday }}</td>
-  </ng-container>
+      <ng-container matColumnDef="asciiName">
+        <th mat-header-cell mat-sort-header *matHeaderCellDef>Tên</th>
+        <td
+          class="highlight per-name"
+          mat-cell
+          *matCellDef="let element"
+          (contextmenu)="onContextMenu($event, element)"
+        >
+          {{ element.name }}
+        </td>
+      </ng-container>
 
-  <ng-container matColumnDef="address">
-    <th mat-header-cell *matHeaderCellDef>Địa chỉ</th>
-    <td mat-cell *matCellDef="let element">{{ element.address }}</td>
-  </ng-container>
+      <ng-container matColumnDef="age">
+        <th mat-header-cell mat-sort-header *matHeaderCellDef>Tuổi</th>
+        <td
+          mat-cell
+          *matCellDef="let element"
+          (contextmenu)="onContextMenu($event, element)"
+        >
+          {{ element.birthday | age }}
+        </td>
+      </ng-container>
 
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-</table>
-<mat-paginator [length]="resultsLength" [pageSize]="20"></mat-paginator>
+      <ng-container matColumnDef="birthday">
+        <th mat-header-cell mat-sort-header *matHeaderCellDef>Năm sinh</th>
+        <td
+          mat-cell
+          *matCellDef="let element"
+          (contextmenu)="onContextMenu($event, element)"
+        >
+          {{ element.birthday }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="phone">
+        <th mat-header-cell mat-sort-header *matHeaderCellDef>Số điện thoại</th>
+        <td
+          mat-cell
+          *matCellDef="let element"
+          (contextmenu)="onContextMenu($event, element)"
+        >
+          {{ element.phone }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="address">
+        <th mat-header-cell mat-sort-header *matHeaderCellDef>Địa chỉ</th>
+        <td
+          mat-cell
+          *matCellDef="let element"
+          (contextmenu)="onContextMenu($event, element)"
+        >
+          {{ element.address }}
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: displayedColumns"
+        (click)="goto(row)"
+      ></tr>
+    </table>
+    <mat-paginator
+      [length]="resultsLength"
+      [pageSize]="pageSize"
+      (page)="pageEvent = $event"
+    ></mat-paginator>
+    <div
+      style="visibility: hidden; position: fixed"
+      [style.left]="contextMenuPosition.x"
+      [style.top]="contextMenuPosition.y"
+      [matMenuTriggerFor]="contextMenu"
+    ></div>
+    <mat-menu #contextMenu="matMenu">
+      <ng-template matMenuContent let-item="item">
+        <button mat-menu-item (click)="edit(item)">
+          <mat-icon>edit</mat-icon> Sửa
+        </button>
+        <button mat-menu-item (click)="delete(item)">
+          <mat-icon>delete</mat-icon> Xoá
+        </button>
+      </ng-template>
+    </mat-menu>
+  </div>
+  <div
+    *ngIf="resultsLength === 0"
+    fxLayout="column"
+    fxLayoutAlign="center center"
+    class="mr-2em"
+  >
+    <p>Chưa có dữ liệu</p>
+  </div>
+</div>

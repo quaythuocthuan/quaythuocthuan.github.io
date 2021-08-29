@@ -1,15 +1,11 @@
 import { remove } from 'lodash';
-import { Prescription } from 'src/app/models/prescription';
-import { PatientsService } from 'src/app/services/patients.service';
-import { PrescriptionsService } from 'src/app/services/prescriptions.service';
+import { Patient } from 'src/app/models/patient';
+import { PrescriptionDetails } from 'src/app/models/prescription';
 
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-
-import {
-  CreatePatientWarningComponent,
-} from './dialogs/create-patient-warning/create-patient-warning.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector   : 'app-create',
@@ -23,14 +19,13 @@ export class CreateComponent implements OnInit {
     'chai',
   ];
 
-  private patientId = 0;
-
-  public patientInfo = this.fb.group({
-    id         : [''],
-    patientName: ['', Validators.required],
-    birthday   : [null, Validators.max(new Date().getFullYear())],
-    address    : [''],
-  });
+  patient: Patient = {
+    id       : '',
+    address  : '-',
+    name     : '',
+    birthday : 0,
+    asciiName: '',
+  };
 
   prescriptionForms: FormGroup[] = [
     this.createPrescriptionForms(),
@@ -38,10 +33,12 @@ export class CreateComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private patientsService: PatientsService,
-    private prescriptionsService: PrescriptionsService,
+    private route: ActivatedRoute,
     public dialog: MatDialog,
   ) {
+    this.route.data.subscribe(({ patient }) => {
+      this.patient = patient;
+    });
   }
 
   ngOnInit(): void {
@@ -62,66 +59,36 @@ export class CreateComponent implements OnInit {
     });
   }
 
-  patientInfoSubmit() {
-    if (this.patientInfo.valid) {
-      this.patientsService.create({
-        name    : this.patientInfo.value.patientName,
-        address : this.patientInfo.value.address,
-        birthday: this.patientInfo.value.birthday,
-      }).subscribe(({
-        id,
-        name,
-        address,
-        birthday,
-      }) => {
-        this.patientInfo.setValue({
-          id,
-          patientName: name,
-          address,
-          birthday,
-        });
-
-        this.patientId = id || 0;
-
-        this.patientInfo.disable();
-      });
-    }
-  }
-
   prescriptionSubmit(form: FormGroup) {
-    if (this.patientId > 0) {
-      const {
-        medicine,
-        quantity,
-        typeMedicine,
-        use,
-      } = form.value as Prescription;
+    const {
+      medicine,
+      quantity,
+      typeMedicine,
+      use,
+    } = form.value as PrescriptionDetails;
 
-      this.prescriptionsService.create({
-        medicine,
-        quantity,
-        patientId: this.patientId,
-        typeMedicine,
-        use,
-      }).subscribe(({
-        medicine,
-        quantity,
-        typeMedicine,
-        use,
-        id,
-      }) => {
-        form.setValue({
-          id,
-          medicine,
-          quantity,
-          typeMedicine,
-          use,
-        });
-        form.disable();
-      });
-    } else {
-      form.valid && this.dialog.open(CreatePatientWarningComponent);
-    }
+    // this.prescriptionsService.create('', {
+    //   medicine,
+    //   quantity,
+    //   prescriptionId: `${this.patient.id || ''}`,
+    //   typeMedicine,
+    //   use,
+    // }).subscribe(({
+    //   medicine,
+    //   quantity,
+    //   typeMedicine,
+    //   use,
+    //   id,
+    // }) => {
+    //   form.setValue({
+    //     id,
+    //     medicine,
+    //     quantity,
+    //     typeMedicine,
+    //     use,
+    //   });
+    //   form.disable();
+    // });
   }
 
   addMore() {

@@ -1,7 +1,8 @@
 export interface Patient {
   address: string;
   asciiName?: string;
-  birthday: Date;
-  id?: number;
+  birthday: number;
+  id?: string;
   name: string;
+  phone?: string;
 }

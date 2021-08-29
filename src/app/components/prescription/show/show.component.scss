@@ -1,0 +1,51 @@
+ul {
+  list-style-type: none;
+  padding: 50px 100px;
+  li {
+    .example-card {
+      width: 400px;
+      max-width: 400px;
+    }
+
+    .mat-elevation-z8 {
+      width: 100%;
+    }
+
+    .mat-row:hover {
+      background-color: rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+    }
+
+    .mat-row::selection .mat-cell {
+      background-color: rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+    }
+
+    .print-btn {
+      text-decoration: underline;
+      cursor: pointer;
+      color: #ff80ab;
+      // padding: 0.5em;
+    }
+
+    .print-btn:hover {
+      color: #ff4081;
+    }
+
+    a {
+      color: slategray;
+    }
+
+    a:active {
+      color: slategray;
+    }
+
+    .mr-2em {
+      margin: 2em;
+    }
+
+    .per-name {
+      text-transform: capitalize;
+    }
+  }
+}

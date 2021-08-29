@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { Patient } from '../models/patient';
 import { headers } from '../utils/contants';
-import { PageInfo } from '../utils/types';
+import { PageInfo, SearchReponsePayload } from '../utils/types';
 
 @Injectable({
   providedIn: 'root',
@@ -23,7 +23,7 @@ export class PatientsService {
     offset = 0,
     limit = 20,
   }: PageInfo) {
-    return this.http.get<Patient[]>(`${this.apiURL}/${this.base}`, {
+    return this.http.get<SearchReponsePayload<Patient[]>>(`${this.apiURL}/${this.base}`, {
       headers: {
         ...headers,
         'page-sort-by': `${sort || ''}`,
@@ -34,8 +34,26 @@ export class PatientsService {
     });
   }
 
+  findById(id: number) {
+    return this.http.get<Patient>(`${this.apiURL}/${this.base}/${id}`, {
+      headers,
+    });
+  }
+
   create(data: Patient) {
     return this.http.post<Patient>(`${this.apiURL}/${this.base}`, data, {
+      headers,
+    });
+  }
+
+  update(id: string, data: Partial<Patient>) {
+    return this.http.patch(`${this.apiURL}/${this.base}/${id}`, data, {
+      headers,
+    });
+  }
+
+  delete(id: string) {
+    return this.http.delete(`${this.apiURL}/${this.base}/${id}`, {
       headers,
     });
   }

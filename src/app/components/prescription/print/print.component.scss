@@ -1,0 +1,86 @@
+body {
+  border: 1px solid transparent;
+}
+
+.wrapper {
+  margin: 5% 10% 0% 10%;
+  padding-bottom: 20px;
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    margin: 0;
+  }
+
+  .header {
+    h1,
+    h3,
+    p {
+      text-align: center;
+    }
+  }
+
+  .common {
+    table {
+      tr {
+        th {
+          text-align: start;
+        }
+      }
+    }
+
+    .right {
+      float: right;
+      padding-left: 2em;
+    }
+  }
+
+  .prescription-details {
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      tr {
+        td {
+          table {
+            border-collapse: unset;
+          }
+
+          table,
+          td,
+          th {
+            border: 0px solid black;
+
+            .use-check-ico {
+              font-size: 35px;
+            }
+          }
+
+          text-align: center;
+        }
+
+        th {
+          padding: 0.5em;
+        }
+      }
+    }
+
+    table,
+    td,
+    th {
+      border: 1px solid black;
+    }
+  }
+
+  .signature {
+    table {
+      float: right;
+      text-align: center;
+      margin-top: 2em;
+    }
+  }
+
+  .per-name {
+    text-transform: capitalize;
+  }
+}

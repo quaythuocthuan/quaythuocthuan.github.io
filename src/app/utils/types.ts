@@ -6,3 +6,8 @@ export interface PageInfo {
   offset?: number;
   limit?: number;
 }
+
+export interface SearchReponsePayload<M> {
+  totalCount: number;
+  data: M;
+}

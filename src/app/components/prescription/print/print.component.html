@@ -1,0 +1,106 @@
+<div class="wrapper">
+  <div class="header">
+    <h1>TOA THUỐC</h1>
+    <h3>Quầy thuốc Thu An</h3>
+    <h3>Bác sĩ: <strong>NGUYỄN THẾ AN</strong></h3>
+    <p>
+      Địa chỉ: Chợ Cầu Móng, Ấp Hoà Qưới A, Xã Hoà An, Huyện Phụng Hiệp, Tỉnh
+      Hậu Giang
+    </p>
+  </div>
+  <hr />
+
+  <div class="common">
+    <h2>THÔNG TIN CHUNG</h2>
+    <table>
+      <tr>
+        <th>HỌ VÀ TÊN<span class="right">:</span></th>
+        <td class="per-name">{{ patient.name }}</td>
+      </tr>
+      <tr>
+        <th>ID<span class="right">:</span></th>
+        <td>{{ patient.id | id }}</td>
+      </tr>
+      <tr>
+        <th>NĂM SINH<span class="right">:</span></th>
+        <td>{{ patient.birthday }} ({{ patient.birthday | age }} tuổi)</td>
+      </tr>
+      <tr>
+        <th>ĐIỆN THOẠI<span class="right">:</span></th>
+        <td>{{ patient.phone }}</td>
+      </tr>
+      <tr>
+        <th>ĐỊA CHỈ<span class="right">:</span></th>
+        <td>{{ patient.address }}</td>
+      </tr>
+    </table>
+  </div>
+  <hr />
+
+  <div class="prescription-details">
+    <h2>CHI TIẾT TOA THUỐC: {{ prescription.id | id }}</h2>
+    <p>NGÀY TẠO: {{ prescription.createdAt | date: "dd-MM-YYYY HH:mm" }}</p>
+    <p>CHẨN ĐOÁN: {{ prescription.diagnostic }}</p>
+    <table>
+      <tr>
+        <th>STT</th>
+        <th>TÊN THUỐC</th>
+        <th>SỐ LƯỢNG</th>
+        <th>ĐƠN VỊ TÍNH</th>
+        <th>LIỀU DÙNG</th>
+      </tr>
+      <tr *ngFor="let prescriptionDetail of prescriptionDetails; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td class="per-name">{{ prescriptionDetail.medicine }}</td>
+        <td>{{ prescriptionDetail.quantity }}</td>
+        <td>{{ prescriptionDetail.typeMedicine }}</td>
+        <td>
+          <table>
+            <tr>
+              <td>
+                Sáng:
+                <span class="use-check-ico">{{
+                  prescriptionDetail.use.morning ? "&#9745;" : "&#9744;"
+                }}</span>
+              </td>
+              <td>
+                Trưa:
+                <span class="use-check-ico">{{
+                  prescriptionDetail.use.afternoon1 ? "&#9745;" : "&#9744;"
+                }}</span>
+              </td>
+              <td>
+                Chiều:
+                <span class="use-check-ico">{{
+                  prescriptionDetail.use.afternoon2 ? "&#9745;" : "&#9744;"
+                }}</span>
+              </td>
+              <td>
+                Tối:
+                <span class="use-check-ico">{{
+                  prescriptionDetail.use.everning ? "&#9745;" : "&#9744;"
+                }}</span>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div class="signature">
+    <table>
+      <tr>
+        <td>
+          <i
+            >...&nbsp;&nbsp;Ngày&nbsp;&nbsp;...&nbsp;&nbsp;Tháng&nbsp;&nbsp;...&nbsp;&nbsp;Năm&nbsp;&nbsp;20&nbsp;&nbsp;...</i
+          >
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <strong>BS. KHÁM BỆNN</strong>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>

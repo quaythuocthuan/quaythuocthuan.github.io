@@ -1,0 +1,11 @@
+<h1 mat-dialog-title><mat-icon color="warn">report_problem</mat-icon> Lỗi không thể xoá bệnh nhân</h1>
+<div mat-dialog-content>
+  <p>Bệnh nhân
+    <strong class="per-name">{{ data.patient.name }}</strong>
+    hiện có {{ data.prescription.totalCount }}
+    toa thuốc, cần xoá những toa thuốc này trước khi xoá hồ sơ của bệnh nhân.</p>
+    <p><strong>Mẹo:</strong> Click <a (click)="gotoPrescriptionsList()">vào đây</a> để chuyển sang trang <strong>DANH SÁCH TOA THUỐC</strong> > xoá tất cả toa thuốc và trở lại.</p>
+</div>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close>OK</button>
+</div>

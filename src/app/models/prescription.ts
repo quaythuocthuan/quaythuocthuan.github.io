@@ -1,8 +1,17 @@
 export interface Prescription {
-  id?: Number;
+  patientId: string;
+  id: string;
+  diagnostic: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface PrescriptionDetails {
+  id?: number;
   medicine: string;
-  patientId: Number;
-  quantity: Number;
+  prescriptionId: string;
+  patientId?: any;
+  quantity: number;
   typeMedicine: string;
   use: {
     morning: boolean;

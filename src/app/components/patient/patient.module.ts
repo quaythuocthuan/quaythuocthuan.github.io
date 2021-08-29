@@ -20,24 +20,22 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 
-import { CreateComponent } from './create/create.component';
-import {
-  CreatePatientWarningComponent,
-} from './create/dialogs/create-patient-warning/create-patient-warning.component';
-import { PrescriptionRoutingModule } from './prescription-routing.module';
-import { PrintComponent } from './print/print.component';
-import { ShowComponent } from './show/show.component';
+import { DialogDeleteComponent } from './patient-detail/dialog-delete/dialog-delete.component';
+import { PatientDetailComponent } from './patient-detail/patient-detail.component';
+import { PatientRoutingModule } from './patient-routing.module';
+import { PatientComponent } from './patient.component';
+import { DeletePrescriptionPopupComponent } from './delete-prescription-popup/delete-prescription-popup.component';
 
 @NgModule({
   declarations: [
-    CreateComponent,
-    ShowComponent,
-    CreatePatientWarningComponent,
-    PrintComponent,
+    PatientComponent,
+    PatientDetailComponent,
+    DialogDeleteComponent,
+    DeletePrescriptionPopupComponent,
   ],
   imports: [
     CommonModule,
-    PrescriptionRoutingModule,
+    PatientRoutingModule,
     MatFormFieldModule,
     ReactiveFormsModule,
     MatInputModule,
@@ -53,9 +51,9 @@ import { ShowComponent } from './show/show.component';
     MatPaginatorModule,
     MatSortModule,
     MatExpansionModule,
+    MatMenuModule,
     PipesModule,
     MatProgressBarModule,
-    MatMenuModule,
   ],
 })
-export class PrescriptionModule { }
+export class PatientModule { }

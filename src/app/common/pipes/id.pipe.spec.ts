@@ -1,8 +1,8 @@
-import { IdPipe } from './id.pipe';
+import { IDPipe } from './id.pipe';
 
-describe('IdPipe', () => {
+describe('IDPipe', () => {
   it('create an instance', () => {
-    const pipe = new IdPipe();
+    const pipe = new IDPipe();
     expect(pipe).toBeTruthy();
   });
 });

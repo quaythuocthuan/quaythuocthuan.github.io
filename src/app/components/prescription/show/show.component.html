@@ -1,1 +1,277 @@
-<p>show works!</p>
+<mat-progress-bar mode="query" *ngIf="isLoading"></mat-progress-bar>
+<ul>
+  <li>
+    <a [routerLink]="['']">
+      <button mat-button><mat-icon>home</mat-icon></button>
+    </a>
+    >
+    <a [routerLink]="['', 'patients']">
+      <button mat-button>Bệnh nhân</button>
+    </a>
+    >
+    <a [routerLink]="['', 'patients', patient.id]">
+      <button mat-button>{{ patient.id }}</button>
+    </a>
+    >
+    <a [routerLink]="['', 'patients', patient.id]">
+      <button mat-button>Đơn thuốc</button>
+    </a>
+    >
+    <a
+      [routerLink]="[
+        '',
+        'patients',
+        patient.id,
+        'prescriptions',
+        prescription.id
+      ]"
+    >
+      <button mat-button>{{ prescription.id }}</button>
+    </a>
+  </li>
+  <li>
+    <div fxLayout="column" fxLayoutAlign="space-around center">
+      <mat-card class="example-card">
+        <mat-card-header fxLayout="column" fxLayoutAlign="space-around center">
+          <mat-card-title fxLayout="column" fxLayoutAlign="space-around center">
+            <mat-icon>account_circle</mat-icon>
+            <span class="per-name">{{ patient.name | uppercase }}</span>
+          </mat-card-title>
+          <mat-card-subtitle>
+            <a [routerLink]="[]">#{{ patient.id | id }}</a>
+          </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p>
+            <mat-icon>note_alt</mat-icon>
+            &nbsp;
+            {{ prescription.diagnostic }}
+          </p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </li>
+  <br />
+  <li>
+    <mat-accordion>
+      <mat-expansion-panel
+        [expanded]="step"
+        (opened)="setStep(true)"
+        hideToggle
+      >
+        <mat-expansion-panel-header>
+          <mat-panel-title
+            fxLayout="column"
+            fxLayoutAlign="space-around center"
+          >
+            <button mat-button color="primary" type="button">
+              <span>Thêm dược phẩm</span>
+              <mat-icon>expand_more</mat-icon>
+            </button>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-panel-description
+          fxLayout="column"
+          fxLayoutAlign="space-around center"
+        >
+          <form
+            [formGroup]="prescriptionForm"
+            (ngSubmit)="prescriptionSubmit()"
+            fxLayout="row wrap"
+            fxLayoutAlign="space-around center"
+            style="width: 400px"
+            fxLayoutGap="1%"
+            #myForm="ngForm"
+          >
+            <mat-form-field appearance="outline" fxFlex="100">
+              <mat-label>Tên thuốc</mat-label>
+              <input
+                matInput
+                placeholder="Tên thuốc"
+                formControlName="medicine"
+                autocomplete="off"
+                required
+              />
+            </mat-form-field>
+            <mat-form-field appearance="outline" fxFlex="49">
+              <mat-label>Số lượng</mat-label>
+              <input
+                matInput
+                type="number"
+                formControlName="quantity"
+                placeholder="Số lượng"
+                autocomplete="off"
+                required
+              />
+            </mat-form-field>
+            <mat-form-field appearance="outline" fxFlex="49">
+              <mat-label>Đơn vị</mat-label>
+              <mat-select formControlName="typeMedicine">
+                <mat-option
+                  *ngFor="let typeMedicine of typeMedicines"
+                  [value]="typeMedicine"
+                >
+                  {{ typeMedicine }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <section
+              formGroupName="use"
+              fxLayout="row"
+              fxFlex="100"
+              fxLayoutAlign="space-between center"
+            >
+              <mat-checkbox formControlName="morning">Sáng</mat-checkbox>
+              <mat-checkbox formControlName="afternoon1">Trưa</mat-checkbox>
+              <mat-checkbox formControlName="afternoon2">Chiều</mat-checkbox>
+              <mat-checkbox formControlName="everning">Tối</mat-checkbox>
+            </section>
+            <div
+              fxFlex="100"
+              fxLayout="row"
+              fxLayoutAlign="center center"
+              style="padding: 1em"
+            >
+              <button type="submit" mat-button color="primary">
+                <mat-icon>done_outline</mat-icon>
+              </button>
+              <button type="reset" mat-button (click)="cancel()">
+                <mat-icon>close</mat-icon>
+              </button>
+            </div>
+          </form>
+        </mat-panel-description>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </li>
+  <li [style.display]="resultsLength > 0 ? 'inherit' : 'none'">
+    <div fxLayout="row" fxLayoutAlign="space-between end">
+      <mat-form-field appearance="standard" *ngIf="prescription.id">
+        <mat-label>Tìm</mat-label>
+        <input
+          matInput
+          placeholder="Tên, số lượng..."
+          #input
+          (keyup)="applyFilter($event)"
+          autocomplete="off"
+        />
+      </mat-form-field>
+      <div style="margin: 0.5em">
+        <a
+          href="/patients/{{ patient.id }}/prescriptions/{{
+            prescription.id
+          }}/print"
+          target="_blank"
+        >
+          <button mat-button class="print-btn">
+            <mat-icon>print</mat-icon>
+          </button>
+        </a>
+      </div>
+    </div>
+    <table
+      mat-table
+      [dataSource]="dataSource"
+      class="mat-elevation-z8"
+      matSort
+      matsortdisableclear
+      matSortActive="updatedAt"
+      matSortDirection="desc"
+    >
+      <ng-container matColumnDef="medicine">
+        <th mat-header-cell mat-sort-header *matHeaderCellDef>Tên thuốc</th>
+        <td
+          class="highlight per-name"
+          mat-cell
+          *matCellDef="let element"
+          (contextmenu)="onContextMenu($event, element)"
+        >
+          {{ element.medicine }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="quantity">
+        <th mat-header-cell mat-sort-header *matHeaderCellDef>Số lượng</th>
+        <td
+          mat-cell
+          *matCellDef="let element"
+          (contextmenu)="onContextMenu($event, element)"
+        >
+          {{ element.quantity }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="typeMedicine">
+        <th mat-header-cell mat-sort-header *matHeaderCellDef>Đơn vị tính</th>
+        <td
+          mat-cell
+          *matCellDef="let element"
+          (contextmenu)="onContextMenu($event, element)"
+        >
+          {{ element.typeMedicine }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="use">
+        <th mat-header-cell mat-sort-header *matHeaderCellDef>Liều dùng</th>
+        <td
+          mat-cell
+          *matCellDef="let element"
+          (contextmenu)="onContextMenu($event, element)"
+        >
+          <section
+            fxLayout="row"
+            fxFlex="100"
+            fxLayoutAlign="start center"
+            fxLayoutGap="2%"
+          >
+            <mat-checkbox [checked]="element.use.morning" disabled="true"
+              >Sáng</mat-checkbox
+            >
+            <mat-checkbox [checked]="element.use.afternoon1" disabled="true"
+              >Trưa</mat-checkbox
+            >
+            <mat-checkbox [checked]="element.use.afternoon2" disabled="true"
+              >Chiều</mat-checkbox
+            >
+            <mat-checkbox [checked]="element.use.everning" disabled="true"
+              >Tối</mat-checkbox
+            >
+          </section>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+    <mat-paginator
+      [length]="resultsLength"
+      [pageSize]="pageSize"
+      (page)="pageEvent = $event"
+      *ngIf="prescription.id"
+    ></mat-paginator>
+    <div
+      style="visibility: hidden; position: fixed"
+      [style.left]="contextMenuPosition.x"
+      [style.top]="contextMenuPosition.y"
+      [matMenuTriggerFor]="contextMenu"
+    ></div>
+    <mat-menu #contextMenu="matMenu">
+      <ng-template matMenuContent let-item="item">
+        <button mat-menu-item (click)="edit(item)">
+          <mat-icon>edit</mat-icon> Sửa
+        </button>
+        <button mat-menu-item (click)="delete(item)">
+          <mat-icon>delete</mat-icon> Xoá
+        </button>
+      </ng-template>
+    </mat-menu>
+  </li>
+  <li
+    *ngIf="resultsLength === 0 && !step"
+    fxLayout="column"
+    fxLayoutAlign="center center"
+  >
+    <p class="mr-2em">Chưa có dữ liệu</p>
+  </li>
+</ul>

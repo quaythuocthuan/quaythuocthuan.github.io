@@ -1,11 +1,15 @@
-.wrapper {
+ul {
+  list-style-type: none;
   padding: 50px 100px;
-  h1, h2 {
-    text-align: center;
+
+  .example-card {
+    max-width: 400px;
+    width: 400px;
   }
 
-  h2 {
-    margin: 2em 0 0 0;
+  .example-header-image {
+    background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
+    background-size: cover;
   }
 
   .mat-elevation-z8 {
@@ -21,11 +25,11 @@
     text-decoration: underline;
   }
 
-  .mr-2em {
-    margin: 2em;
+  h1, h2 {
+    text-align: center;
   }
 
-  p {
+  li {
     a {
       color: slategray;
     }
@@ -33,9 +37,9 @@
     a:active {
       color: slategray;
     }
-  }
 
-  .per-name {
-    text-transform: capitalize;
+    .mr-2em {
+      margin: 2em;
+    }
   }
 }

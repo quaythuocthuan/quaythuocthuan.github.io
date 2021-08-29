@@ -1,19 +1,15 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { HomeComponent } from '../pages/home/home.component';
-
 const routes: Routes = [
   {
     path        : '',
-    component   : HomeComponent,
-    loadChildren: () => import('../components/prescription/prescription.module').then(m => m.PrescriptionModule),
+    loadChildren: () => import('../components/patient/patient.module').then(m => m.PatientModule),
   },
-  {
-    path        : 'prescription',
-    component   : HomeComponent,
-    loadChildren: () => import('../components/prescription/prescription.module').then(m => m.PrescriptionModule),
-  },
+  // {
+  //   path        : 'prescription',
+  //   loadChildren: () => import('../components/prescription/prescription.module').then(m => m.PrescriptionModule),
+  // },
 ];
 
 @NgModule({

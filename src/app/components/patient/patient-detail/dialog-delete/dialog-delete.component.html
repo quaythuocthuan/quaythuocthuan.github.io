@@ -1,0 +1,11 @@
+<h1 mat-dialog-title><mat-icon color="warn">report_problem</mat-icon> Lỗi không thể xoá toa thuốc</h1>
+<div mat-dialog-content>
+  <p>Toa thuốc
+    <strong><code>{{ data.prescription.id | id }}</code></strong>
+    hiện có {{ data.prescriptionsDetails.totalCount }}
+    dược phẩm cần phải xoá trước khi xoá toa thuốc này.</p>
+    <p><strong>Mẹo:</strong> Click <a (click)="gotoDetails()">vào đây</a> để chuyển sang trang <strong>CHI TIẾT</strong> > xoá tất cả dược phẩm trong toa và trở lại.</p>
+</div>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close>OK</button>
+</div>
